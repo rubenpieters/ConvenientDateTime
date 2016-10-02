@@ -11,10 +11,8 @@ import scala.language.implicitConversions
   * Created by ruben on 1/10/16.
   */
 
-case class DateTime3Separator(dateOrder: DateOrder, timeOrder: TimeOrder, dateSeparator: String, dateTimeSeparator: String, timeSeparator: String)
-
 object DateTime3Separator {
-  def parseToLocalDateTime(dateTime3Separator: DateTime3Separator, text: String): ParserRepr => LocalDateTime = parserRepr => {
+  def parseToLocalDateTime(dateTime3Separator: DateTime3SeparatorLike, text: String): ParserRepr => LocalDateTime = parserRepr => {
     ParserReprOps.parse(
       (Intersperse.intersperse(dateTime3Separator.dateOrder.order, Literal(dateTime3Separator.dateSeparator))
         :+ Literal(dateTime3Separator.dateTimeSeparator))
@@ -24,9 +22,23 @@ object DateTime3Separator {
   }
 }
 
-case class DateTime2Separator()
+trait DateTime3SeparatorLike {
+  def dateOrder: DateOrder
+  def timeOrder: TimeOrder
+  def dateSeparator: String
+  def dateTimeSeparator: String
+  def timeSeparator: String
+}
 
-case class DateTime1Separator()
+case class DateTime3Separator(dateOrder: DateOrder, timeOrder: TimeOrder, dateSeparator: String, dateTimeSeparator: String, timeSeparator: String)
+  extends DateTime3SeparatorLike
+
+case class DateTime1Separator(dateOrder: DateOrder, timeOrder: TimeOrder, separator: String)
+  extends DateTime3SeparatorLike {
+  override val dateSeparator = separator
+  override def dateTimeSeparator: String = separator
+  override def timeSeparator: String = separator
+}
 
 
 case class Date1Separator(dateOrder: DateOrder, separator: String)
