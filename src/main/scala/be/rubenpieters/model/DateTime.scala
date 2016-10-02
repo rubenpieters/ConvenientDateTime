@@ -91,7 +91,7 @@ case class DateOrder(order: List[DateField]) {
 }
 
 object DateOrder {
-  implicit def dateTupleToOrder[A <: DateField, B <: DateField, C <: DateField](tuple: (A, B, C)): DateOrder = {
+  implicit def dateTupleToOrder(tuple: (DateField, DateField, DateField)): DateOrder = {
     DateOrder(List(tuple._1, tuple._2, tuple._3))
   }
 }
