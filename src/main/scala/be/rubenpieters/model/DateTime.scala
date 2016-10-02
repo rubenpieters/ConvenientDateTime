@@ -161,5 +161,13 @@ object DateOrder {
   implicit def dateTimeFieldTupleToOrder(tuple: (TimeField, TimeField, TimeField)): TimeOrder = {
     TimeOrder(List(tuple._1, tuple._2, tuple._3))
   }
+
+  implicit class EnrichedDate1Separator(date1Separator: Date1Separator) {
+    def parseToLocalDate(text: String): ParserRepr => LocalDate = Date1Separator.parseToLocalDate(date1Separator, text)
+  }
+
+  implicit class EnrichedDateTime3Separator(dateTime3SeparatorLike: DateTime3SeparatorLike) {
+    def parseToLocalDateTime(text: String): ParserRepr => LocalDateTime = DateTime3Separator.parseToLocalDateTime(dateTime3SeparatorLike, text)
+  }
 }
 
