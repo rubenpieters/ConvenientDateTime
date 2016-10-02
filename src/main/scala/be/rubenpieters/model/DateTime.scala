@@ -11,6 +11,18 @@ import scala.language.implicitConversions
   * Created by ruben on 1/10/16.
   */
 
+case class FreeFormDateTime(fields: List[ParserReprField])
+
+object FreeFormDateTime {
+  def parseToLocalDate(freeFormDateTime: FreeFormDateTime, text: String): ParserRepr => LocalDate = parserRepr => {
+    ParserReprOps.parse(freeFormDateTime.fields)(parserRepr).parseToLocalDate(text)
+  }
+
+  def parseToLocalDateTime(freeFormDateTime: FreeFormDateTime, text: String): ParserRepr => LocalDateTime = parserRepr => {
+    ParserReprOps.parse(freeFormDateTime.fields)(parserRepr).parseToLocalDateTime(text)
+  }
+}
+
 object DateTime3Separator {
   def parseToLocalDateTime(dateTime3Separator: DateTime3SeparatorLike, text: String): ParserRepr => LocalDateTime = parserRepr => {
     ParserReprOps.parse(
@@ -162,12 +174,22 @@ object DateOrder {
     TimeOrder(List(tuple._1, tuple._2, tuple._3))
   }
 
+  // Less concise than implicit conversion, but maybe a bit safer
+  implicit class EnrichedString(literalString: String) {
+    def lit: Literal = Literal(literalString)
+  }
+
   implicit class EnrichedDate1Separator(date1Separator: Date1Separator) {
     def parseToLocalDate(text: String): ParserRepr => LocalDate = Date1Separator.parseToLocalDate(date1Separator, text)
   }
 
   implicit class EnrichedDateTime3Separator(dateTime3SeparatorLike: DateTime3SeparatorLike) {
     def parseToLocalDateTime(text: String): ParserRepr => LocalDateTime = DateTime3Separator.parseToLocalDateTime(dateTime3SeparatorLike, text)
+  }
+
+  implicit class EnrichedFreeFormDateTime(freeFormDateTime: FreeFormDateTime) {
+    def parseToLocalDate(text: String): ParserRepr => LocalDate = FreeFormDateTime.parseToLocalDate(freeFormDateTime, text)
+    def parseToLocalDateTime(text: String): ParserRepr => LocalDateTime = FreeFormDateTime.parseToLocalDateTime(freeFormDateTime, text)
   }
 }
 

@@ -26,4 +26,10 @@ class DateTimeTest extends FlatSpec with Matchers {
     parsedDateMDYSMH(new JavaParserRepr) shouldEqual LocalDateTime.of(2016, 10, 2, 16, 25, 55)
   }
 
+  "FreeFormDateTime" should "be parsed in basic cases" in {
+    val parsedDateFF1 = FreeFormDateTime(List(Hour, "x".lit, Minute, "-".lit, Second, " ".lit, Year, "/".lit, Month, "|".lit, Day)).parseToLocalDateTime("16x25-55 2016/10|02")
+
+    parsedDateFF1(new JavaParserRepr) shouldEqual LocalDateTime.of(2016, 10, 2, 16, 25, 55)
+  }
+
 }
