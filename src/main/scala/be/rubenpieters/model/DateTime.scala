@@ -69,7 +69,12 @@ class JavaParserRepr extends ParserRepr {
   val builder = new DateTimeFormatterBuilder()
 
   override def parseYear(): ParserRepr = {
+    builder.optionalStart()
     builder.appendPattern("yyyy")
+    builder.optionalEnd()
+    builder.optionalStart()
+    builder.appendPattern("yy")
+    builder.optionalEnd()
     this
   }
   override def parseMonth(): ParserRepr = {
