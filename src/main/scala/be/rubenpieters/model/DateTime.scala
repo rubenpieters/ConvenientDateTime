@@ -1,7 +1,8 @@
 package be.rubenpieters.model
 
 import java.time.{LocalDate, LocalDateTime}
-import java.time.format.DateTimeFormatterBuilder
+import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder, TextStyle}
+import java.time.temporal.{ChronoField, TemporalAccessor, TemporalField}
 
 import be.rubenpieters.util.Intersperse
 
@@ -15,11 +16,13 @@ case class FreeFormDateTime(fields: List[ParserReprField])
 
 object FreeFormDateTime {
   def parseToLocalDate(freeFormDateTime: FreeFormDateTime, text: String): ParserRepr => LocalDate = parserRepr => {
-    ParserReprOps.parse(freeFormDateTime.fields)(parserRepr).parseToLocalDate(text)
+    ParserReprOps.parse(freeFormDateTime.fields)(parserRepr)
+      .asFormatter().parseToLocalDate(text)
   }
 
   def parseToLocalDateTime(freeFormDateTime: FreeFormDateTime, text: String): ParserRepr => LocalDateTime = parserRepr => {
-    ParserReprOps.parse(freeFormDateTime.fields)(parserRepr).parseToLocalDateTime(text)
+    ParserReprOps.parse(freeFormDateTime.fields)(parserRepr)
+      .asFormatter().parseToLocalDateTime(text)
   }
 }
 
@@ -30,6 +33,7 @@ object DateTime3Separator {
         :+ Literal(dateTime3Separator.dateTimeSeparator))
         ++ Intersperse.intersperse(dateTime3Separator.timeOrder.order, Literal(dateTime3Separator.timeSeparator))
     )(parserRepr)
+      .asFormatter()
       .parseToLocalDateTime(text)
   }
 }
@@ -56,37 +60,49 @@ case class DateTime1Separator(dateOrder: DateOrder, timeOrder: TimeOrder, separa
 case class Date1Separator(dateOrder: DateOrder, separator: String)
 
 object Date1Separator {
-  def parseToLocalDate(date1Separator: Date1Separator, text: String): ParserRepr => LocalDate = parserRepr => {
+  def formatter(date1Separator: Date1Separator): ParserRepr => FormatterRepr = parserRepr => {
     ParserReprOps.parse(Intersperse.intersperse(date1Separator.dateOrder.order, Literal(date1Separator.separator)))(parserRepr)
-      .parseToLocalDate(text)
+      .asFormatter()
+  }
+
+  def parseToLocalDate(date1Separator: Date1Separator, text: String): ParserRepr => LocalDate = parserRepr => {
+    formatter(date1Separator)(parserRepr).parseToLocalDate(text)
   }
 }
 
-sealed trait ParserRepr {
+trait ParserRepr {
   def parseYear(): ParserRepr
   def parseMonth(): ParserRepr
   def parseDay(): ParserRepr
   def parseLiteral(literal: String): ParserRepr
 
-  def parseToLocalDate(text: String): LocalDate
-
   def parseHour(): ParserRepr
   def parseMinute(): ParserRepr
   def parseSecond(): ParserRepr
 
-  def parseToLocalDateTime(text: String): LocalDateTime
+  def asFormatter(): FormatterRepr
+
+
 }
 
-class JavaParserRepr extends ParserRepr {
+final class JavaParserRepr extends ParserRepr {
   val builder = new DateTimeFormatterBuilder()
 
   override def parseYear(): ParserRepr = {
-    builder.optionalStart()
+    builder.appendText(ChronoField.YEAR)
+
+    /*builder.optionalStart()
     builder.appendPattern("yyyy")
+    builder.optionalEnd()
+    builder.optionalStart()
+    builder.appendPattern("yyy")
     builder.optionalEnd()
     builder.optionalStart()
     builder.appendPattern("yy")
     builder.optionalEnd()
+    builder.optionalStart()
+    builder.appendPattern("y")
+    builder.optionalEnd()*/
     this
   }
   override def parseMonth(): ParserRepr = {
@@ -101,8 +117,6 @@ class JavaParserRepr extends ParserRepr {
     builder.appendLiteral(literal)
     this
   }
-
-  override def parseToLocalDate(text: String): LocalDate = LocalDate.parse(text, builder.toFormatter)
 
   override def parseHour(): ParserRepr = {
     builder.appendPattern("kk")
@@ -119,7 +133,7 @@ class JavaParserRepr extends ParserRepr {
     this
   }
 
-  override def parseToLocalDateTime(text: String): LocalDateTime = LocalDateTime.parse(text, builder.toFormatter)
+  override def asFormatter(): FormatterRepr = new JavaFormatterRepr(builder.toFormatter)
 }
 
 object ParserReprOps {
@@ -140,6 +154,20 @@ object ParserReprOps {
       case Literal(literal) => parserRepr.parseLiteral(literal)
     }
   }
+}
+
+trait FormatterRepr extends Any {
+  def parseToLocalDate(text: String): LocalDate
+  def parseToLocalDateTime(text: String): LocalDateTime
+
+  def format(temporalAccessor: TemporalAccessor): String
+}
+
+final class JavaFormatterRepr(val formatter: DateTimeFormatter) extends AnyVal with FormatterRepr {
+  override def parseToLocalDateTime(text: String): LocalDateTime = LocalDateTime.parse(text, formatter)
+  override def parseToLocalDate(text: String): LocalDate = LocalDate.parse(text, formatter)
+
+  override def format(temporalAccessor: TemporalAccessor): String = formatter.format(temporalAccessor)
 }
 
 sealed trait ParserReprField
@@ -181,6 +209,7 @@ object DateOrder {
 
   implicit class EnrichedDate1Separator(date1Separator: Date1Separator) {
     def parseToLocalDate(text: String): ParserRepr => LocalDate = Date1Separator.parseToLocalDate(date1Separator, text)
+    def formatter: ParserRepr => FormatterRepr = Date1Separator.formatter(date1Separator)
   }
 
   implicit class EnrichedDateTime3Separator(dateTime3SeparatorLike: DateTime3SeparatorLike) {

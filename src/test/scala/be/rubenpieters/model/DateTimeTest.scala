@@ -14,6 +14,8 @@ class DateTimeTest extends FlatSpec with Matchers {
     val parsedDateYMD = Date1Separator((Year, Month, Day), "/").parseToLocalDate("16/10/02")
     val parsedDateMDY = Date1Separator((Month, Day, Year), "/").parseToLocalDate("10/02/2016")
 
+    println(Date1Separator((Year, Month, Day), "/").formatter(new JavaParserRepr).format(parsedDateYMD(new JavaParserRepr)))
+
     parsedDateYMD(new JavaParserRepr) shouldEqual LocalDate.of(2016, 10, 2)
     parsedDateMDY(new JavaParserRepr) shouldEqual LocalDate.of(2016, 10, 2)
   }
