@@ -1,5 +1,7 @@
 package be.rubenpieters.datetime4s
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatterBuilder.ReducedPrinterParser
 import java.time.format.{DateTimeFormatterBuilder, SignStyle, TextStyle}
 import java.time.temporal.{ChronoField, TemporalField}
 
@@ -54,6 +56,11 @@ trait ChronoFieldYear {
   def temporalField = ChronoField.YEAR
 }
 case object Year extends TemporalField1 with ChronoFieldYear
+case object Year2 extends FormatterField with ChronoFieldYear {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    dateTimeFormatterBuilder.appendValueReduced(temporalField, 2, 2, LocalDate.of(2000, 1, 1))
+  }
+}
 final case class Year(override val minWidth: Int, override val maxWidth: Int, override val signStyle: SignStyle)
   extends TemporalFieldMinMaxWidthSignStyle with ChronoFieldYear
 
