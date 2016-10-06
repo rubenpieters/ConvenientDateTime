@@ -14,8 +14,25 @@ object FormatterFieldsCodeGen extends App {
   def printGeneratedCode() = {
     val FetchSymbolMeaning = """.*\*\s+([^\s]+)\s+([^\s]+)\s+.*""".r
     val symbolMap = DocStrings.symbolMeaningDoc.split("\n").drop(3).flatMap{
-      case FetchSymbolMeaning(symbol, meaning) => Some((symbol, meaning))
-      case _ => None
+      case FetchSymbolMeaning(symbol, meaning) =>
+        if (symbol.equals("F")) {
+          // not entirely sure why both 'W' and 'F' are labeled week-of-month, which causes a naming conflict
+          // but later in the docs the F pattern appends a chronofield called aligned day of week in month
+          List((symbol, "aligned-day-of-week-in-month"))
+        } else if (symbol.contains("/")) {
+          val symbols = symbol.split("/")
+          if (symbols.size == 2) {
+            val symbolMeaningDefault = (symbols(0), meaning)
+            val symbolMeaningText = (symbols(1), s"$meaning-txt")
+            List(symbolMeaningDefault, symbolMeaningText)
+          } else {
+            throw new IllegalStateException("Unexpected symbols with '/'")
+          }
+        } else {
+          List((symbol, meaning))
+        }
+
+      case _ => List()
     }.toMap
 
     val FetchPattern = """.*\*\s+([^\s]+)\s+.*""".r
