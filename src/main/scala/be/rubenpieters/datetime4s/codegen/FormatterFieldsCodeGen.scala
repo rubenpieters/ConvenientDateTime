@@ -36,7 +36,7 @@ object FormatterFieldsCodeGen extends App {
     }.toMap
 
     val FetchPattern = """.*\*\s+([^\s]+)\s+.*""".r
-    val patternsWithName = DocStrings.pattern1Doc.split("\n").drop(3).flatMap{
+    val patternsWithName = DocStrings.patternDoc.split("\n").drop(3).flatMap{
       case FetchPattern(pattern) => Some((pattern, symbolMap.get(pattern.head.toString)))
       case _ => None
     }.toList
@@ -119,7 +119,7 @@ object DocStrings {
       |     *   }       reserved for future use
     """.stripMargin
 
-  val pattern1Doc =
+  val patternDoc =
     """
       |     *  Pattern  Count  Equivalent builder methods
       |     *  -------  -----  --------------------------
@@ -187,5 +187,48 @@ object DocStrings {
       |     *    ccc     3      appendText(ChronoField.DAY_OF_WEEK, TextStyle.SHORT_STANDALONE)
       |     *    cccc    4      appendText(ChronoField.DAY_OF_WEEK, TextStyle.FULL_STANDALONE)
       |     *    ccccc   5      appendText(ChronoField.DAY_OF_WEEK, TextStyle.NARROW_STANDALONE)
+      |     *    a       1      appendText(ChronoField.AMPM_OF_DAY, TextStyle.SHORT)
+      |     *    h       1      appendValue(ChronoField.CLOCK_HOUR_OF_AMPM)
+      |     *    hh      2      appendValue(ChronoField.CLOCK_HOUR_OF_AMPM, 2)
+      |     *    H       1      appendValue(ChronoField.HOUR_OF_DAY)
+      |     *    HH      2      appendValue(ChronoField.HOUR_OF_DAY, 2)
+      |     *    k       1      appendValue(ChronoField.CLOCK_HOUR_OF_DAY)
+      |     *    kk      2      appendValue(ChronoField.CLOCK_HOUR_OF_DAY, 2)
+      |     *    K       1      appendValue(ChronoField.HOUR_OF_AMPM)
+      |     *    KK      2      appendValue(ChronoField.HOUR_OF_AMPM, 2)
+      |     *    m       1      appendValue(ChronoField.MINUTE_OF_HOUR)
+      |     *    mm      2      appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+      |     *    s       1      appendValue(ChronoField.SECOND_OF_MINUTE)
+      |     *    ss      2      appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+      |     *
+      |     *    S..S    1..n   appendFraction(ChronoField.NANO_OF_SECOND, n, n, false)
+      |     *    A       1      appendValue(ChronoField.MILLI_OF_DAY)
+      |     *    A..A    2..n   appendValue(ChronoField.MILLI_OF_DAY, n)
+      |     *    n       1      appendValue(ChronoField.NANO_OF_SECOND)
+      |     *    n..n    2..n   appendValue(ChronoField.NANO_OF_SECOND, n)
+      |     *    N       1      appendValue(ChronoField.NANO_OF_DAY)
+      |     *    N..N    2..n   appendValue(ChronoField.NANO_OF_DAY, n)
+      |     *    VV      2      appendZoneId()
+      |     *    z       1      appendZoneText(TextStyle.SHORT)
+      |     *    zz      2      appendZoneText(TextStyle.SHORT)
+      |     *    zzz     3      appendZoneText(TextStyle.SHORT)
+      |     *    zzzz    4      appendZoneText(TextStyle.FULL)
+      |     *    O       1      appendLocalizedOffsetPrefixed(TextStyle.SHORT);
+      |     *    OOOO    4      appendLocalizedOffsetPrefixed(TextStyle.FULL);
+      |     *    X       1      appendOffset("+HHmm","Z")
+      |     *    XX      2      appendOffset("+HHMM","Z")
+      |     *    XXX     3      appendOffset("+HH:MM","Z")
+      |     *    XXXX    4      appendOffset("+HHMMss","Z")
+      |     *    XXXXX   5      appendOffset("+HH:MM:ss","Z")
+      |     *    x       1      appendOffset("+HHmm","+00")
+      |     *    xx      2      appendOffset("+HHMM","+0000")
+      |     *    xxx     3      appendOffset("+HH:MM","+00:00")
+      |     *    xxxx    4      appendOffset("+HHMMss","+0000")
+      |     *    xxxxx   5      appendOffset("+HH:MM:ss","+00:00")
+      |     *    Z       1      appendOffset("+HHMM","+0000")
+      |     *    ZZ      2      appendOffset("+HHMM","+0000")
+      |     *    ZZZ     3      appendOffset("+HHMM","+0000")
+      |     *    ZZZZ    4      appendLocalizedOffset(TextStyle.FULL);
+      |     *    ZZZZZ   5      appendOffset("+HH:MM:ss","Z")
     """.stripMargin
 }
