@@ -13,7 +13,7 @@ final case class FreeFormDate(fields: List[FormatterField], locale: Locale = Loc
   val preBuiltFormatter = {
     val builder = new DateTimeFormatterBuilder()
     fields.foreach(_.append(builder))
-    builder.toFormatter()
+    builder.toFormatter(locale)
   }
 }
 
