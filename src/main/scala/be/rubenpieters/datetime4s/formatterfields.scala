@@ -26,7 +26,7 @@ final case class LiteralChar(literal: Char) extends FormatterField {
   }
 }
 
-final case class AdHocPattern(pattern: String) extends FormatterField {
+final case class EmbeddedPattern(pattern: String) extends FormatterField {
   override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
     dateTimeFormatterBuilder.appendPattern(pattern)
   }
@@ -93,7 +93,7 @@ final case class Instant(fractionalDigits: Int) extends FormatterField {
 object implicits {
   implicit class EnrichedString(val str: String) extends AnyVal {
     def lit: LiteralString = LiteralString(str)
-    def pat: AdHocPattern = AdHocPattern(str)
+    def pat: EmbeddedPattern = EmbeddedPattern(str)
   }
 
   implicit class EnrichedChar(val char: Char) extends AnyVal {
