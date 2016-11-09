@@ -38,7 +38,12 @@ sealed trait PredefinedPatternFormatterField extends FormatterField {
   override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
     dateTimeFormatterBuilder.appendPattern(pattern)
   }
+}
 
+final case class EmbeddedFormatterFieldList(list: List[FormatterField]) extends FormatterField {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    list.foreach(_.append(dateTimeFormatterBuilder))
+  }
 }
 
 object implicits {
@@ -54,6 +59,7 @@ object implicits {
   implicit class EnrichedListOfFields(val list: List[FormatterField]) extends AnyVal {
     def separator(str: String) = Intersperse.intersperse(list, str.lit)
     def separator(char: Char) = Intersperse.intersperse(list, char.lit)
+    def emb: EmbeddedFormatterFieldList = EmbeddedFormatterFieldList(list)
   }
 }
 
