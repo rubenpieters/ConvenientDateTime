@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatterBuilder.ReducedPrinterParser
 import java.time.format.{DateTimeFormatterBuilder, SignStyle, TextStyle}
 import java.time.temporal.{ChronoField, TemporalField}
 
+import be.rubenpieters.util.Intersperse
+
 /**
   * Created by ruben on 4/10/2016.
   */
@@ -36,6 +38,7 @@ sealed trait PredefinedPatternFormatterField extends FormatterField {
   override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
     dateTimeFormatterBuilder.appendPattern(pattern)
   }
+
 }
 
 object implicits {
@@ -46,6 +49,11 @@ object implicits {
 
   implicit class EnrichedChar(val char: Char) extends AnyVal {
     def lit: LiteralChar = LiteralChar(char)
+  }
+
+  implicit class EnrichedListOfFields(val list: List[FormatterField]) extends AnyVal {
+    def separator(str: String) = Intersperse.intersperse(list, str.lit)
+    def separator(char: Char) = Intersperse.intersperse(list, char.lit)
   }
 }
 

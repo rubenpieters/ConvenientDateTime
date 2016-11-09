@@ -16,4 +16,10 @@ class FreeFormDateTest extends FlatSpec with Matchers {
 
     FreeFormDate.parse[LocalDate](ffd, "16/10/04") shouldEqual LocalDate.of(2016, 10, 4)
   }
+
+  "FeeFormDate" should "parse correctly in basic case with separator" in {
+    val ffd = FreeFormDate(List(Year2, MonthOfYear1, DayOfMonth1).separator("/"))
+
+    FreeFormDate.parse[LocalDate](ffd, "16/10/04") shouldEqual LocalDate.of(2016, 10, 4)
+  }
 }
