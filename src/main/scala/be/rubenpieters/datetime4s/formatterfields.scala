@@ -24,11 +24,28 @@ final case class LiteralChar(literal: Char) extends FormatterField {
   }
 }
 
+final case class AdHocPattern(pattern: String) extends FormatterField {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    dateTimeFormatterBuilder.appendPattern(pattern)
+  }
+}
+
 sealed trait PredefinedPatternFormatterField extends FormatterField {
   def pattern: String
 
   override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
     dateTimeFormatterBuilder.appendPattern(pattern)
+  }
+}
+
+object implicits {
+  implicit class EnrichedString(val str: String) extends AnyVal {
+    def lit: LiteralString = LiteralString(str)
+    def pat: AdHocPattern = AdHocPattern(str)
+  }
+
+  implicit class EnrichedChar(val char: Char) extends AnyVal {
+    def lit: LiteralChar = LiteralChar(char)
   }
 }
 
