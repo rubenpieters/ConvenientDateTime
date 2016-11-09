@@ -46,6 +46,14 @@ final case class EmbeddedFormatterFieldList(list: List[FormatterField]) extends 
   }
 }
 
+final case class OptionalFormatterFieldList(list: List[FormatterField]) extends FormatterField {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    dateTimeFormatterBuilder.optionalStart()
+    list.foreach(_.append(dateTimeFormatterBuilder))
+    dateTimeFormatterBuilder.optionalEnd()
+  }
+}
+
 object implicits {
   implicit class EnrichedString(val str: String) extends AnyVal {
     def lit: LiteralString = LiteralString(str)
@@ -60,6 +68,11 @@ object implicits {
     def separator(str: String) = Intersperse.intersperse(list, str.lit)
     def separator(char: Char) = Intersperse.intersperse(list, char.lit)
     def emb: EmbeddedFormatterFieldList = EmbeddedFormatterFieldList(list)
+    def opt: OptionalFormatterFieldList = OptionalFormatterFieldList(list)
+  }
+
+  implicit class EnrichedFormatterField(val formatterField: FormatterField) extends AnyVal {
+    def opt: OptionalFormatterFieldList = OptionalFormatterFieldList(List(formatterField))
   }
 }
 
