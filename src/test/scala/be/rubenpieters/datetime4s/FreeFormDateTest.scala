@@ -11,19 +11,19 @@ import be.rubenpieters.datetime4s.implicits._
   * Created by ruben on 4/10/2016.
   */
 class FreeFormDateTest extends FlatSpec with Matchers {
-  "FeeFormDate" should "parse correctly in basic case" in {
+  "FreeFormDate" should "parse correctly in basic case" in {
     val ffd = FreeFormDate(List(Year2, LiteralString("/"), MonthOfYear1, "/".lit, DayOfMonth1))
 
     FreeFormDate.parse[LocalDate](ffd, "16/10/04") shouldEqual LocalDate.of(2016, 10, 4)
   }
 
-  "FeeFormDate" should "parse correctly in basic case with separator" in {
+  "FreeFormDate" should "parse correctly in basic case with separator" in {
     val ffd = FreeFormDate(List(Year2, MonthOfYear1, DayOfMonth1).separator("/"))
 
     FreeFormDate.parse[LocalDate](ffd, "16/10/04") shouldEqual LocalDate.of(2016, 10, 4)
   }
 
-  "FeeFormDate" should "parse date time case with two separators correctly" in {
+  "FreeFormDate" should "parse date time case with two separators correctly" in {
     val ffd = FreeFormDate(List(
       List(Year2, MonthOfYear1, DayOfMonth1).separator("/").emb
       , " ".lit
@@ -33,7 +33,7 @@ class FreeFormDateTest extends FlatSpec with Matchers {
     FreeFormDate.parse[LocalDateTime](ffd, "16/10/04 15-07-21") shouldEqual LocalDateTime.of(2016, 10, 4, 15, 7, 21)
   }
 
-  "FeeFormDate" should "parse optional correctly" in {
+  "FreeFormDate" should "parse optional correctly" in {
     val ffd = FreeFormDate(List(
       List(Year2, MonthOfYear1, DayOfMonth1).separator("/").emb
       , " optional".lit.opt
@@ -43,7 +43,7 @@ class FreeFormDateTest extends FlatSpec with Matchers {
     FreeFormDate.parse[LocalDate](ffd, "16/10/04") shouldEqual LocalDate.of(2016, 10, 4)
   }
 
-  "FeeFormDate" should "parse optional list correctly" in {
+  "FreeFormDate" should "parse optional list correctly" in {
     val ffd = FreeFormDate(List(
       List(Year2, MonthOfYear1, DayOfMonth1).separator("/").emb
       , List(" ".lit, "optional".lit).opt
@@ -53,7 +53,7 @@ class FreeFormDateTest extends FlatSpec with Matchers {
     FreeFormDate.parse[LocalDate](ffd, "16/10/04") shouldEqual LocalDate.of(2016, 10, 4)
   }
 
-  "FeeFormDate" should "parse nested optionals correctly" in {
+  "FreeFormDate" should "parse nested optionals correctly" in {
     val ffd = FreeFormDate(List(
       List(Year2, MonthOfYear1, DayOfMonth1).separator("/").emb
       , List(" ".lit.opt, "optional".lit).opt
