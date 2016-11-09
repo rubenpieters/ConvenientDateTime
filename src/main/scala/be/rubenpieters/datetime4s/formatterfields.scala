@@ -2,7 +2,7 @@ package be.rubenpieters.datetime4s
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatterBuilder.ReducedPrinterParser
-import java.time.format.{DateTimeFormatterBuilder, SignStyle, TextStyle}
+import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder, SignStyle, TextStyle}
 import java.time.temporal.{ChronoField, TemporalField}
 
 import be.rubenpieters.util.Intersperse
@@ -54,6 +54,42 @@ final case class OptionalFormatterFieldList(list: List[FormatterField]) extends 
   }
 }
 
+final case class EmbeddedDateTimeFormatter(dateTimeFormatter: DateTimeFormatter) extends FormatterField {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    dateTimeFormatterBuilder.append(dateTimeFormatter)
+  }
+}
+
+final case object ChronologyId extends FormatterField {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    dateTimeFormatterBuilder.appendChronologyId()
+  }
+}
+
+final case class EmbeddedChronologyText(textStyle: TextStyle) extends FormatterField {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    dateTimeFormatterBuilder.appendChronologyText(textStyle)
+  }
+}
+
+final case class EmbeddedFraction(field: TemporalField, minWidth: Int, maxWidth: Int, decimalPoint: Boolean) extends FormatterField {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    dateTimeFormatterBuilder.appendFraction(field, minWidth, maxWidth, decimalPoint)
+  }
+}
+
+final case object Instant extends FormatterField {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    dateTimeFormatterBuilder.appendInstant()
+  }
+}
+
+final case class Instant(fractionalDigits: Int) extends FormatterField {
+  override def append(dateTimeFormatterBuilder: DateTimeFormatterBuilder): Unit = {
+    dateTimeFormatterBuilder.appendInstant(fractionalDigits)
+  }
+}
+
 object implicits {
   implicit class EnrichedString(val str: String) extends AnyVal {
     def lit: LiteralString = LiteralString(str)
@@ -73,6 +109,18 @@ object implicits {
 
   implicit class EnrichedFormatterField(val formatterField: FormatterField) extends AnyVal {
     def opt: OptionalFormatterFieldList = OptionalFormatterFieldList(List(formatterField))
+  }
+
+  implicit class EnrichedDateTimeFormatter(val dateTimeFormatter: DateTimeFormatter) extends AnyVal {
+    def emb: EmbeddedDateTimeFormatter = EmbeddedDateTimeFormatter(dateTimeFormatter)
+  }
+
+  implicit class EnrichedTextStyle(val textStyle: TextStyle) extends AnyVal {
+    def embChronologyText: EmbeddedChronologyText = EmbeddedChronologyText(textStyle)
+  }
+  
+  implicit class EnrichedTemporalField(val temporalField: TemporalField) extends AnyVal {
+    def embFraction(minWidth: Int, maxWidth: Int, decimalPoint: Boolean): EmbeddedFraction = EmbeddedFraction(temporalField, minWidth, maxWidth, decimalPoint)
   }
 }
 
