@@ -238,38 +238,206 @@ case object DayOfWeek5 extends PredefinedPatternFormatterField {
   override val pattern = "EEEEE"
 }
 
-case object Localized1 extends PredefinedPatternFormatterField {
+case object LocalizedDayOfWeek1 extends PredefinedPatternFormatterField {
   override val pattern = "e"
 }
 
-case object Localized2 extends PredefinedPatternFormatterField {
+case object LocalizedDayOfWeek2 extends PredefinedPatternFormatterField {
   override val pattern = "ee"
 }
 
-case object Localized3 extends PredefinedPatternFormatterField {
+case object LocalizedDayOfWeek3 extends PredefinedPatternFormatterField {
   override val pattern = "eee"
 }
 
-case object Localized4 extends PredefinedPatternFormatterField {
+case object LocalizedDayOfWeek4 extends PredefinedPatternFormatterField {
   override val pattern = "eeee"
 }
 
-case object Localized5 extends PredefinedPatternFormatterField {
+case object LocalizedDayOfWeek5 extends PredefinedPatternFormatterField {
   override val pattern = "eeeee"
 }
 
-case object LocalizedTxt1 extends PredefinedPatternFormatterField {
+case object LocalizedDayOfWeekTxt1 extends PredefinedPatternFormatterField {
   override val pattern = "c"
 }
 
-case object LocalizedTxt3 extends PredefinedPatternFormatterField {
+case object LocalizedDayOfWeekTxt3 extends PredefinedPatternFormatterField {
   override val pattern = "ccc"
 }
 
-case object LocalizedTxt4 extends PredefinedPatternFormatterField {
+case object LocalizedDayOfWeekTxt4 extends PredefinedPatternFormatterField {
   override val pattern = "cccc"
 }
 
-case object LocalizedTxt5 extends PredefinedPatternFormatterField {
+case object LocalizedDayOfWeekTxt5 extends PredefinedPatternFormatterField {
   override val pattern = "ccccc"
+}
+
+case object AmPmOfDay1 extends PredefinedPatternFormatterField {
+  override val pattern = "a"
+}
+
+case object ClockHourOfAmPm1 extends PredefinedPatternFormatterField {
+  override val pattern = "h"
+}
+
+case object ClockHourOfAmPm2 extends PredefinedPatternFormatterField {
+  override val pattern = "hh"
+}
+
+case object HourOfDay1 extends PredefinedPatternFormatterField {
+  override val pattern = "H"
+}
+
+case object HourOfDay2 extends PredefinedPatternFormatterField {
+  override val pattern = "HH"
+}
+
+case object ClockHourOfAmPm241 extends PredefinedPatternFormatterField {
+  override val pattern = "k"
+}
+
+case object ClockHourOfAmPm242 extends PredefinedPatternFormatterField {
+  override val pattern = "kk"
+}
+
+case object HourOfAmPm1 extends PredefinedPatternFormatterField {
+  override val pattern = "K"
+}
+
+case object HourOfAmPm2 extends PredefinedPatternFormatterField {
+  override val pattern = "KK"
+}
+
+case object MinuteOfHour1 extends PredefinedPatternFormatterField {
+  override val pattern = "m"
+}
+
+case object MinuteOfHour2 extends PredefinedPatternFormatterField {
+  override val pattern = "mm"
+}
+
+case object SecondOfMinute1 extends PredefinedPatternFormatterField {
+  override val pattern = "s"
+}
+
+case object SecondOfMinute2 extends PredefinedPatternFormatterField {
+  override val pattern = "ss"
+}
+
+case object FractionOfSecondEP extends PredefinedPatternFormatterField {
+  override val pattern = "S..S"
+}
+
+case object MilliOfDay1 extends PredefinedPatternFormatterField {
+  override val pattern = "A"
+}
+
+case object MilliOfDayEP extends PredefinedPatternFormatterField {
+  override val pattern = "A..A"
+}
+
+case object NanoOfSecond1 extends PredefinedPatternFormatterField {
+  override val pattern = "n"
+}
+
+case object NanoOfSecondEP extends PredefinedPatternFormatterField {
+  override val pattern = "n..n"
+}
+
+case object NanoOfDay1 extends PredefinedPatternFormatterField {
+  override val pattern = "N"
+}
+
+case object NanoOfDayEP extends PredefinedPatternFormatterField {
+  override val pattern = "N..N"
+}
+
+case object TimeZoneId2 extends PredefinedPatternFormatterField {
+  override val pattern = "VV"
+}
+
+case object TimeZoneName1 extends PredefinedPatternFormatterField {
+  override val pattern = "z"
+}
+
+case object TimeZoneName2 extends PredefinedPatternFormatterField {
+  override val pattern = "zz"
+}
+
+case object TimeZoneName3 extends PredefinedPatternFormatterField {
+  override val pattern = "zzz"
+}
+
+case object TimeZoneName4 extends PredefinedPatternFormatterField {
+  override val pattern = "zzzz"
+}
+
+case object LocalizedZoneOffset1 extends PredefinedPatternFormatterField {
+  override val pattern = "O"
+}
+
+case object LocalizedZoneOffset4 extends PredefinedPatternFormatterField {
+  override val pattern = "OOOO"
+}
+
+case object ZoneOffsetXz1 extends PredefinedPatternFormatterField {
+  override val pattern = "X"
+}
+
+case object ZoneOffsetXz2 extends PredefinedPatternFormatterField {
+  override val pattern = "XX"
+}
+
+case object ZoneOffsetXz3 extends PredefinedPatternFormatterField {
+  override val pattern = "XXX"
+}
+
+case object ZoneOffsetXz4 extends PredefinedPatternFormatterField {
+  override val pattern = "XXXX"
+}
+
+case object ZoneOffsetXz5 extends PredefinedPatternFormatterField {
+  override val pattern = "XXXXX"
+}
+
+case object ZoneOffsetX1 extends PredefinedPatternFormatterField {
+  override val pattern = "x"
+}
+
+case object ZoneOffsetX2 extends PredefinedPatternFormatterField {
+  override val pattern = "xx"
+}
+
+case object ZoneOffsetX3 extends PredefinedPatternFormatterField {
+  override val pattern = "xxx"
+}
+
+case object ZoneOffsetX4 extends PredefinedPatternFormatterField {
+  override val pattern = "xxxx"
+}
+
+case object ZoneOffsetX5 extends PredefinedPatternFormatterField {
+  override val pattern = "xxxxx"
+}
+
+case object ZoneOffsetZ1 extends PredefinedPatternFormatterField {
+  override val pattern = "Z"
+}
+
+case object ZoneOffsetZ2 extends PredefinedPatternFormatterField {
+  override val pattern = "ZZ"
+}
+
+case object ZoneOffsetZ3 extends PredefinedPatternFormatterField {
+  override val pattern = "ZZZ"
+}
+
+case object ZoneOffsetZ4 extends PredefinedPatternFormatterField {
+  override val pattern = "ZZZZ"
+}
+
+case object ZoneOffsetZ5 extends PredefinedPatternFormatterField {
+  override val pattern = "ZZZZZ"
 }

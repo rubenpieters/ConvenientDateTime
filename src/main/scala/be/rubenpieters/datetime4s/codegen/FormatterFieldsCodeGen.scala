@@ -10,9 +10,10 @@ import com.google.common.base.CaseFormat
 object FormatterFieldsCodeGen extends App {
 
   printGeneratedCode()
-
+  //((?:[^\s]+\s)+[^\s]+)
   def printGeneratedCode() = {
-    val FetchSymbolMeaning = """.*\*\s+([^\s]+)\s+([^\s]+)\s+.*""".r
+    val meaningExtractor = """((?:[^\s\(']+\s)*[^\s\(']+)"""
+    val FetchSymbolMeaning = raw""".*\*\s+([^\s]+)\s+$meaningExtractor\s+.*""".r
     val symbolMap = DocStrings.symbolMeaningDoc.split("\n").drop(3).flatMap{
       case FetchSymbolMeaning(symbol, meaning) =>
         if (symbol.equals("F")) {
@@ -48,7 +49,23 @@ object FormatterFieldsCodeGen extends App {
         case Some(meaning) =>
           val exceedsPad = pattern.contains("..")
           val patternLength = pattern.length
-          val patternName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, meaning.replaceAll("-", "_"))
+          val newMeaning = if (meaning.startsWith("zone-offset")) {
+            pattern.head match {
+              case 'x' => s"$meaning-X"
+              case 'X' => s"$meaning-XZ"
+              case 'Z' => s"$meaning-Z"
+              case _ => throw new IllegalStateException(s"unexpected pattern for zone-offset: $pattern")
+            }
+          } else if (meaning.startsWith("clock-hour-of-am-pm")) {
+            pattern.head match {
+              case 'h' => s"$meaning"
+              case 'k' => s"$meaning-24"
+              case _ => throw new IllegalStateException(s"unexpected pattern for clock-hour-of-am-p: $pattern")
+            }
+          } else {
+            meaning
+          }
+          val patternName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, newMeaning.replaceAll("-", "_").replaceAll("\\s", "_"))
           val patternSuffix = exceedsPad match {
             case false => patternLength
             case true => "EP"
